@@ -5,10 +5,13 @@
 #include <MFRC522.h> // Thư viện đọc thẻ RFID
 
 // ================= CẤU HÌNH CHÂN (PINS) =================
-#define SS_PIN 14   // Chân CS cho module RFID
-#define RST_PIN 15  // Chân Reset cho module RFID
-#define RELAY_PIN 4 // Chân điều khiển khóa cửa (Relay)
-#define OPTO_PIN 5  // Chân đọc trạng thái cửa (Opto)
+#define RST_PIN 2   // Chân Reset cho module RFID
+#define SS_PIN 4    // Chân CS cho module RFID
+#define SCK_PIN 14  // Chân SCK cho module RFID
+#define MISO_PIN 35 // Chân MISO cho module RFID
+#define MOSI_PIN 12 // Chân MOSI cho module RFID
+#define RELAY_PIN 5 // Chân điều khiển khóa cửa (Relay)
+#define OPTO_PIN 36 // Chân đọc trạng thái cửa (Opto)
 
 // ================= KHỞI TẠO ĐỐI TƯỢNG =================
 MFRC522 rfid(SS_PIN, RST_PIN);
@@ -88,8 +91,11 @@ void setup()
   Serial.println(ETH.localIP());
 
   // 3. Khởi tạo RFID
-  SPI.begin();
+  SPI.begin(SCK_PIN, MISO_PIN, MOSI_PIN, SS_PIN);
   rfid.PCD_Init();
+
+  rfid.PCD_DumpVersionToSerial(); // check version
+
   Serial.println("Hệ thống đã sẵn sàng quẹt thẻ!");
 
   // 4. Khởi tạo MQTT
